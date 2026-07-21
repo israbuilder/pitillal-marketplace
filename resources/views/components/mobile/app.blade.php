@@ -37,6 +37,7 @@
         @auth
             <nav class="fixed inset-x-0 bottom-0 z-50 mx-auto grid max-w-md grid-cols-4 border-t border-slate-200 bg-white px-2 pb-[calc(.5rem+env(safe-area-inset-bottom))] pt-2">
                 @php($role = auth()->user()->role ?? 'customer')
+                @endphp
                 @if($role === 'business')
                     <a wire:navigate href="{{ route('business.dashboard') }}" class="rounded-xl p-2 text-center text-xs font-bold">Inicio</a>
                     <a wire:navigate href="{{ route('business.orders') }}" class="rounded-xl p-2 text-center text-xs font-bold">Pedidos</a>
