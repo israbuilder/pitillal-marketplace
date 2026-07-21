@@ -3,6 +3,7 @@
 namespace App\Livewire\Auth;
 
 use App\Models\User;
+use App\Models\Business;
 use App\Support\RedirectsUsersByRole;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
@@ -62,6 +63,21 @@ class Register extends Component
             $user,
             $validated['accountType']
         );
+
+        $user = User::create($attributes);
+
+        $this->assignRole($user, $validated['accountType']);
+
+        if ($validated['accountType'] === 'business') {
+            Business::create([
+                'user_id' => $user->id,
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'phone' => $validated['phone'] !== ''
+                    ? $validated['phone']
+                    : null,
+            ]);
+        }
 
         return $user->fresh();
     });
