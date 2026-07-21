@@ -71,25 +71,65 @@ jobs:
           rm -f .env
 
       - name: Configure SSH
+        shell: bash
         env:
           VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_PORT: ${{ secrets.VPS_PORT }}
         run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
+          set -e
 
-          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
+          mkdir -p "$HOME/.ssh"
+          chmod 700 "$HOME/.ssh"
+
+          printf '%s\n' "$VPS_SSH_KEY" \
+            | tr -d '\r' \
+            > "$HOME/.ssh/deploy_key"
+
+          chmod 600 "$HOME/.ssh/deploy_key"
+
+          test -s "$HOME/.ssh/deploy_key" || {
+            echo "ERROR: VPS_SSH_KEY está vacío"
+            exit 1
+          }
+
+          ssh-keygen -y -f "$HOME/.ssh/deploy_key" > /dev/null || {
+            echo "ERROR: VPS_SSH_KEY no es una llave privada válida"
+            exit 1
+          }
 
           ssh-keyscan \
             -p "$VPS_PORT" \
             -H "$VPS_HOST" \
-            >> ~/.ssh/known_hosts
+            > "$HOME/.ssh/known_hosts"
 
-          chmod 600 ~/.ssh/known_hosts
+          chmod 600 "$HOME/.ssh/known_hosts"
+
+          test -s "$HOME/.ssh/known_hosts" || {
+            echo "ERROR: No se pudo registrar el host del VPS"
+            exit 1
+          }
+
+          echo "SSH configuration created successfully"
+
+      - name: Test SSH connection
+        shell: bash
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+        run: |
+          ssh \
+            -o BatchMode=yes \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            -i "$HOME/.ssh/deploy_key" \
+            -p "$VPS_PORT" \
+            "$VPS_USER@$VPS_HOST" \
+            "echo 'SSH connection successful'"
 
       - name: Enable maintenance mode
+        shell: bash
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
@@ -97,7 +137,10 @@ jobs:
           VPS_PATH: ${{ secrets.VPS_PATH }}
         run: |
           ssh \
-            -i ~/.ssh/deploy_key \
+            -o BatchMode=yes \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            -i "$HOME/.ssh/deploy_key" \
             -p "$VPS_PORT" \
             "$VPS_USER@$VPS_HOST" \
             "cd '$VPS_PATH' &&
@@ -108,6 +151,7 @@ jobs:
             php artisan down --retry=60 || true"
 
       - name: Upload application
+        shell: bash
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
@@ -123,11 +167,12 @@ jobs:
             --exclude='bootstrap/cache/' \
             --exclude='vendor/' \
             --exclude='node_modules/' \
-            -e "ssh -i ~/.ssh/deploy_key -p $VPS_PORT" \
+            -e "ssh -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -i $HOME/.ssh/deploy_key -p $VPS_PORT" \
             ./ \
             "$VPS_USER@$VPS_HOST:$VPS_PATH/"
 
       - name: Complete Laravel deployment
+        shell: bash
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
@@ -135,7 +180,10 @@ jobs:
           VPS_PATH: ${{ secrets.VPS_PATH }}
         run: |
           ssh \
-            -i ~/.ssh/deploy_key \
+            -o BatchMode=yes \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            -i "$HOME/.ssh/deploy_key" \
             -p "$VPS_PORT" \
             "$VPS_USER@$VPS_HOST" << EOF
               set -e
@@ -169,14 +217,22 @@ jobs:
 
       - name: Restore application on failure
         if: failure()
+        shell: bash
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
           VPS_PORT: ${{ secrets.VPS_PORT }}
           VPS_PATH: ${{ secrets.VPS_PATH }}
         run: |
-          ssh \
-            -i ~/.ssh/deploy_key \
-            -p "$VPS_PORT" \
-            "$VPS_USER@$VPS_HOST" \
-            "cd '$VPS_PATH' && php artisan up || true"
+          if test -f "$HOME/.ssh/deploy_key"; then
+            ssh \
+              -o BatchMode=yes \
+              -o IdentitiesOnly=yes \
+              -o StrictHostKeyChecking=yes \
+              -i "$HOME/.ssh/deploy_key" \
+              -p "$VPS_PORT" \
+              "$VPS_USER@$VPS_HOST" \
+              "cd '$VPS_PATH' && php artisan up || true"
+          else
+            echo "SSH key was not created; maintenance mode was not enabled."
+          fi
