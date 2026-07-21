@@ -1,0 +1,182 @@
+name: Deploy Production
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Test, build and deploy
+    runs-on: ubuntu-latest
+
+    environment:
+      name: production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, bcmath, intl, pdo_mysql
+          coverage: none
+
+      - name: Install PHP dependencies for tests
+        run: |
+          composer install \
+            --prefer-dist \
+            --no-interaction \
+            --no-progress
+
+      - name: Prepare Laravel test environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          touch database/database.sqlite
+
+      - name: Run tests
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+        run: php artisan test
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build production assets
+        run: npm run build
+
+      - name: Remove files not needed for transfer
+        run: |
+          rm -rf node_modules
+          rm -rf vendor
+          rm -f .env
+
+      - name: Configure SSH
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          ssh-keyscan \
+            -p "$VPS_PORT" \
+            -H "$VPS_HOST" \
+            >> ~/.ssh/known_hosts
+
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Enable maintenance mode
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          VPS_PATH: ${{ secrets.VPS_PATH }}
+        run: |
+          ssh \
+            -i ~/.ssh/deploy_key \
+            -p "$VPS_PORT" \
+            "$VPS_USER@$VPS_HOST" \
+            "cd '$VPS_PATH' &&
+            test -f .env || {
+              echo 'ERROR: Production .env does not exist';
+              exit 1;
+            };
+            php artisan down --retry=60 || true"
+
+      - name: Upload application
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          VPS_PATH: ${{ secrets.VPS_PATH }}
+        run: |
+          rsync -az \
+            --delete \
+            --exclude='.env' \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='storage/' \
+            --exclude='bootstrap/cache/' \
+            --exclude='vendor/' \
+            --exclude='node_modules/' \
+            -e "ssh -i ~/.ssh/deploy_key -p $VPS_PORT" \
+            ./ \
+            "$VPS_USER@$VPS_HOST:$VPS_PATH/"
+
+      - name: Complete Laravel deployment
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          VPS_PATH: ${{ secrets.VPS_PATH }}
+        run: |
+          ssh \
+            -i ~/.ssh/deploy_key \
+            -p "$VPS_PORT" \
+            "$VPS_USER@$VPS_HOST" << EOF
+              set -e
+
+              cd "$VPS_PATH"
+
+              test -f .env || {
+                echo "ERROR: Production .env does not exist"
+                exit 1
+              }
+
+              composer install \
+                --no-dev \
+                --prefer-dist \
+                --optimize-autoloader \
+                --no-interaction \
+                --no-progress
+
+              php artisan migrate --force
+
+              php artisan optimize:clear
+              php artisan optimize
+
+              php artisan storage:link || true
+              php artisan queue:restart || true
+
+              php artisan about --only=environment
+
+              php artisan up
+          EOF
+
+      - name: Restore application on failure
+        if: failure()
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          VPS_PATH: ${{ secrets.VPS_PATH }}
+        run: |
+          ssh \
+            -i ~/.ssh/deploy_key \
+            -p "$VPS_PORT" \
+            "$VPS_USER@$VPS_HOST" \
+            "cd '$VPS_PATH' && php artisan up || true"
