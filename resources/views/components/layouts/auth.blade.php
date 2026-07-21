@@ -27,7 +27,7 @@
     <meta property="og:url"
           content="{{ url()->current() }}">
     <meta property="og:image"
-          content="{{ asset('images/share.jpg') }}">
+          content="{{ asset('/assets/images/share.jpg') }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
 
