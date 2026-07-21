@@ -40,32 +40,45 @@ class Register extends Component
     }
 
     public function register(): void
-    {
-        $validated = $this->validate();
+{
+    $validated = $this->validate();
 
-        $user = DB::transaction(function () use ($validated): User {
-            $attributes = [
-                'name' => $validated['name'],
-                'email' => $validated['email'],
-                'password' => Hash::make($validated['password']),
-            ];
+    $user = DB::transaction(function () use ($validated): User {
+        $attributes = [
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ];
 
-            if ($validated['phone'] !== '' && in_array('phone', (new User())->getFillable(), true)) {
-                $attributes['phone'] = $validated['phone'];
-            }
+        if (
+            $validated['phone'] !== '' &&
+            in_array('phone', (new User())->getFillable(), true)
+        ) {
+            $attributes['phone'] = $validated['phone'];
+        }
 
-            $user = User::create($attributes);
-            $this->assignRole($user, $validated['accountType']);
+        $user = User::create($attributes);
 
-            return $user->fresh();
-        });
+        $this->assignRole(
+            $user,
+            $validated['accountType']
+        );
 
-        event(new Registered($user));
-        Auth::login($user);
-        request()->session()->regenerate();
+        return $user->fresh();
+    });
 
-        $this->redirectRoute($this->redirectRouteFor($user), navigate: true);
-    }
+    event(new Registered($user));
+
+    Auth::login($user);
+    request()->session()->regenerate();
+
+    $route = $this->redirectRouteFor($user);
+
+    $this->redirect(
+        route($route),
+        navigate: false
+    );
+}
 
     public function render()
     {
