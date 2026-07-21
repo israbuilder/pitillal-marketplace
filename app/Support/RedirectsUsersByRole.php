@@ -17,13 +17,13 @@ trait RedirectsUsersByRole
                 return 'driver.dashboard';
             }
 
-            return 'mobile.customer.home';
+            return 'customer.home';
         }
 
         return match ($user->role ?? 'customer') {
-            'business' => 'mobile.business.dashboard',
-            'driver' => 'mobile.driver.dashboard',
-            default => 'mobile.customer.home',
+            'business' => 'business.dashboard',
+            'driver' => 'driver.dashboard',
+            default => 'customer.home',
         };
     }
 
