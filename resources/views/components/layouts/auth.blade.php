@@ -7,6 +7,39 @@
 
     <title>{{ $title ?? config('app.name') }}</title>
 
+
+    <meta name="description"
+          content="Compra productos locales y recibe entregas rápidas con Impulsando Latinos Marketplace.">
+
+    <meta name="keywords"
+          content="marketplace, delivery, negocios locales, Houston, compras, restaurantes">
+
+    <meta name="author"
+          content="Impulsando Latinos">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Impulsando Latinos">
+    <meta property="og:title"
+          content="{{ $title ?? config('app.name') }}">
+    <meta property="og:description"
+          content="Compra productos locales y recibe entregas rápidas con Impulsando Latinos Marketplace.">
+    <meta property="og:url"
+          content="{{ url()->current() }}">
+    <meta property="og:image"
+          content="{{ asset('images/share.jpg') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title"
+          content="{{ $title ?? config('app.name') }}">
+    <meta name="twitter:description"
+          content="Compra productos locales y recibe entregas rápidas con Impulsando Latinos Marketplace.">
+    <meta name="twitter:image"
+          content="{{ asset('images/share.jpg') }}">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
