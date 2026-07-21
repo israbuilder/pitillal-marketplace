@@ -59,7 +59,10 @@ jobs:
           cache: npm
 
       - name: Install frontend dependencies
-        run: npm ci
+        run: npm install axios
+
+      - name: Install frontend dependencies
+        run: npm install -D fontaine
 
       - name: Build production assets
         run: npm run build
