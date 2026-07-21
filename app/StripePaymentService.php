@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App;
 
 use App\Models\Order;
 use Stripe\PaymentIntent;
