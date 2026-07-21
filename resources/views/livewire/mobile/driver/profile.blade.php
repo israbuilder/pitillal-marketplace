@@ -44,10 +44,12 @@
                             <img
                                 src="{{ $profile_photo->temporaryUrl() }}"
                                 alt="Vista previa"
+                                style="width:50px"
                                 class="h-24 w-24 rounded-full border-4 border-white/30 object-cover shadow-lg"
                             >
                         @elseif ($existingProfilePhoto)
                             <img
+                            
                                 src="{{ Storage::disk('public')->url($existingProfilePhoto) }}"
                                 alt="{{ $name }}"
                                 class="h-24 w-24 rounded-full border-4 border-white/30 object-cover shadow-lg"

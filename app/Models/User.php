@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -52,9 +53,36 @@ class User extends Authenticatable
         ];
     }
 
-    public function driverOrders(): HasMany
-{
-    return $this->hasMany(Order::class, 'driver_id');
-}
+ public function driverOrders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'driver_id');
+    }
+
+    public function driverWallet(): HasOne
+    {
+        return $this->hasOne(
+            DriverWallet::class,
+            'user_id'
+        );
+    }
+
+    public function walletTopUps(): HasMany
+    {
+        return $this->hasMany(
+            DriverWalletTopUp::class,
+            'user_id'
+        );
+    }
+
+    public function getOrCreateDriverWallet(): DriverWallet
+    {
+        return $this->driverWallet()->firstOrCreate(
+            [],
+            [
+                'balance_cents' => 0,
+                'currency' => 'usd',
+            ]
+        );
+    }
 
 }

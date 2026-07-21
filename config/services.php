@@ -25,6 +25,20 @@ return [
     'currency' => env('STRIPE_CURRENCY', 'usd'),
 ],
 
+   'driver_wallet' => [
+        'default_acceptance_fee_cents' => (int) round(
+            ((float) env('DRIVER_DEFAULT_ACCEPTANCE_FEE', 5)) * 100
+        ),
+
+        'minimum_top_up_cents' => (int) round(
+            ((float) env('DRIVER_MINIMUM_TOP_UP', 10)) * 100
+        ),
+
+        'maximum_top_up_cents' => (int) round(
+            ((float) env('DRIVER_MAXIMUM_TOP_UP', 500)) * 100
+        ),
+    ],
+
     'resend' => [
         'key' => env('RESEND_API_KEY'),
     ],

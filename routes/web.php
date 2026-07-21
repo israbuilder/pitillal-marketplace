@@ -19,8 +19,11 @@ use App\Livewire\Mobile\Driver\Dashboard as DriverDashboard;
 use App\Livewire\Mobile\Driver\Orders as DriverOrders;
 use App\Livewire\Mobile\Driver\Delivery as DriverDelivery;
 use App\Livewire\Mobile\Driver\Profile as DriverProfile;
+use App\Livewire\Mobile\Driver\Wallet as DriverWallet;
+use App\Livewire\Mobile\Driver\WalletSuccess;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StripeDriverWalletWebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +35,11 @@ use Illuminate\Support\Facades\Route;
 | Si ya está autenticado, lo envía según su role.
 |
 */
+
+Route::post(
+    '/stripe/webhooks/driver-wallet',
+    StripeDriverWalletWebhookController::class
+)->name('stripe.webhooks.driver-wallet');
 
 Route::get('/', function () {
     if (! Auth::check()) {
@@ -147,6 +155,14 @@ Route::middleware('auth')->group(function (): void {
          Route::get('/driver/orders', DriverOrders::class)
         ->name('driver.orders');
 
-    Route::get('/driver/orders/{order}', DriverDelivery::class)
+    Route::get('/driver/order/{order}', DriverDelivery::class)
         ->name('driver.delivery');
+
+         Route::get('/driver/wallet', DriverWallet::class)
+            ->name('wallet.index');
+
+        Route::get('/wallet/success', WalletSuccess::class)
+            ->name('wallet.success');
+
+       
 });

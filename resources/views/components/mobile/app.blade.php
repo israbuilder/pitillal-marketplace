@@ -45,8 +45,17 @@
                 @elseif($role === 'driver')
                     <a wire:navigate href="{{ route('driver.dashboard') }}" class="rounded-xl p-2 text-center text-xs font-bold">Trabajo</a>
                     <a wire:navigate href="{{ route('driver.orders') }}" class="rounded-xl p-2 text-center text-xs font-bold">Historial</a>
-                    <a wire:navigate href="{{ route('driver.profile') }}" class="rounded-xl p-2 text-center text-xs font-bold">Ganancias</a>
                     <a wire:navigate href="{{ route('driver.profile') }}" class="rounded-xl p-2 text-center text-xs font-bold">Perfil</a>
+                    @php
+                        $menuWallet = auth()->user()?->driverWallet;
+                    @endphp
+                    <a wire:navigate href="{{ route('wallet.index') }}" class="rounded-xl p-2 text-center text-xs font-bold">
+                        Wallet
+                        <span class="block text-[10px] text-emerald-600">
+                            {{ $menuWallet?->formatted_balance ?? '$0.00' }}
+                        </span>
+                    </a>
+
                 @else
                     <a wire:navigate href="{{ route('customer.home') }}" class="rounded-xl p-2 text-center text-xs font-bold">Inicio</a>
                     <a wire:navigate href="{{ route('customer.orders') }}" class="rounded-xl p-2 text-center text-xs font-bold">Pedidos</a>

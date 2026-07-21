@@ -9,12 +9,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Layout;
+// use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 
-#[Layout('components.layouts.mobile')]
+// #[Layout('components.layouts.mobile')]
 class Profile extends Component
 {
     use WithFileUploads;
@@ -308,6 +308,7 @@ class Profile extends Component
 
     public function render()
     {
-        return view('livewire.mobile.driver.profile');
+        return view('livewire.mobile.driver.profile')
+        ->layout('components.mobile.app', ['title' => 'Perfil del conductor', 'activeTab' => 'driver']);
     }
 }

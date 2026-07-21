@@ -7,10 +7,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('components.layouts.mobile')]
+// #[Layout('components.layouts.mobile')]
 class Orders extends Component
 {
     public string $tab = 'available';
@@ -80,6 +79,7 @@ class Orders extends Component
                 'accepted',
                 'ready_for_pickup',
                 'picked_up',
+                'on_the_way',
             ])
             ->latest('updated_at')
             ->get();
@@ -148,7 +148,7 @@ class Orders extends Component
         unset($this->selectedOrder);
     }
 
-    public function acceptOrder(int $orderId): void
+    public function acceptOrder(int $orderId ): void
     {
         DB::transaction(function () use ($orderId) {
             $order = Order::query()
@@ -295,6 +295,10 @@ class Orders extends Component
 
     public function render()
     {
-        return view('livewire.mobile.driver.orders');
+        return view('livewire.mobile.driver.orders')
+            ->layout('components.mobile.app', [
+                'title' => 'Órdenes',
+                'activeTab' => 'ordenes',
+            ]);
     }
 }

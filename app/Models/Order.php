@@ -9,7 +9,10 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'business_id',
-        'driver_id',
+         'driver_id',
+        'driver_acceptance_fee_cents',
+        'driver_fee_charged_at',
+        'status',
         'status',
         'subtotal',
         'delivery_fee',
@@ -32,6 +35,8 @@ class Order extends Model
     'subtotal' => 'decimal:2',
     'delivery_fee' => 'decimal:2',
     'total' => 'decimal:2',
+     'driver_acceptance_fee_cents' => 'integer',
+            'driver_fee_charged_at' => 'datetime',
 ];
 
     public function customer()
@@ -52,6 +57,26 @@ class Order extends Model
     public function driver()
     {
         return $this->belongsTo(User::class, 'driver_id');
+    }
+
+      public function getDriverAcceptanceFeeCents(): int
+    {
+        if ($this->driver_acceptance_fee_cents > 0) {
+            return $this->driver_acceptance_fee_cents;
+        }
+
+        return config(
+            'services.driver_wallet.default_acceptance_fee_cents',
+            500
+        );
+    }
+
+    public function getFormattedDriverAcceptanceFeeAttribute(): string
+    {
+        return '$' . number_format(
+            $this->getDriverAcceptanceFeeCents() / 100,
+            2
+        );
     }
 
     public function items()

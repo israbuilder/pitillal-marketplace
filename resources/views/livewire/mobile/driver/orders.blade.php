@@ -162,6 +162,15 @@
                                     </p>
                                 </div>
 
+
+                               <a
+                                    wire:navigate
+                                    href="{{ route('driver.delivery', ['order' => $order->id]) }}"
+                                    class="rounded-2xl bg-slate-100 px-4 py-3 text-sm font-black text-slate-700"
+                                >
+                                    Delivery
+                                </a>
+
                                 <button
                                     type="button"
                                     wire:click="viewOrder({{ $order->id }})"
