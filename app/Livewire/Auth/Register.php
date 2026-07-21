@@ -12,7 +12,6 @@ use Illuminate\Validation\Rules\Password;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-
 #[Layout('components.layouts.auth')]
 #[Title('Crear cuenta')]
 class Register extends Component
