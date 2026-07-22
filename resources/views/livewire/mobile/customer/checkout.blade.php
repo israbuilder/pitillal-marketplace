@@ -363,7 +363,7 @@
                 wire:click="placeOrder"
                 wire:loading.attr="disabled"
                 wire:target="placeOrder"
-                class="flex h-14 w-full items-center justify-center rounded-2xl bg-black px-5 text-base font-bold text-dark shadow-lg"
+                class="flex h-14 w-full items-center justify-center rounded-2xl bg-black px-5 text-base font-bold text-white shadow-lg"
             >
                 <span
                     wire:loading.remove

@@ -69,7 +69,7 @@
                     </div>
 
                     <div class="min-w-0 flex-1">
-                        <h2 class="truncate text-2xl font-black">
+                        <h2 class="truncate text-2xl text-black" style="color:#000 !important">
                             {{ $name ?: 'Conductor' }}
                         </h2>
 
@@ -82,10 +82,11 @@
                             wire:click="toggleAvailability"
                             wire:loading.attr="disabled"
                             wire:target="toggleAvailability"
+                            style="color:#000"
                             class="mt-4 rounded-full px-4 py-2 text-xs font-black shadow-sm transition disabled:opacity-50
                                 {{ $is_available
                                     ? 'bg-emerald-400 text-emerald-950'
-                                    : 'bg-white/20 text-white' }}"
+                                    : 'bg-black text-black' }}"
                         >
                             <span wire:loading.remove wire:target="toggleAvailability">
                                 {{ $is_available

@@ -38,7 +38,7 @@
  
                     @if ($this->cartCount() > 0)
                         <span
-                            class="absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-orange-500 px-1 text-[10px] font-bold text-dark"
+                            class="absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-orange-500 px-1 text-[10px] font-bold text-white"
                         >
                             {{ $this->cartCount() }}
                         </span>
