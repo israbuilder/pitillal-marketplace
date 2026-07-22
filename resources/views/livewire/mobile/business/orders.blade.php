@@ -4,9 +4,9 @@
             <button wire:click="$set('filter','{{ $value }}')" class="whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold {{ $filter === $value ? 'bg-slate-950 text-white' : 'bg-white text-slate-600' }}">{{ $label }}</button>
         @endforeach
     </div>
-<div wire:poll.60s="refreshDashboard" class="mt2">
+<div wire:poll.visible.15s="refreshDashboard" class="mt2">
      @forelse($orders as $order)
-        <article class="rounded-3xl bg-white p-5 shadow-sm">
+        <article class="rounded-3xl bg-white p-5 shadow-sm mb-2">
             <div class="flex justify-between gap-4">
                 <div>
                     <p class="text-xs font-bold uppercase text-indigo-600">{{ str_replace('_',' ', $order->status) }}</p>

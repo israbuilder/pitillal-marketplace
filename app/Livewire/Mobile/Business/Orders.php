@@ -30,10 +30,7 @@ class Orders extends Component
 }
 
 private function loadDashboard(): void
-{
-    // $this->orders = $this->business->orders()->with(['customer', 'driver'])->latest()->limit(10)->get();
-// dd('llegue');   
-
+{ 
  $query = $this->business->orders()->with(['items', 'driver'])->latest();
 
         if ($this->filter === 'active') {
