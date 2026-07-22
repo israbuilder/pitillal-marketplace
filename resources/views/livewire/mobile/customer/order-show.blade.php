@@ -923,12 +923,9 @@
                 </p>
             </section>
         @endif
-    </main>
 
-    {{-- Barra inferior --}}
-    <div class="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 p-4 backdrop-blur">
-        <div class="mx-auto flex max-w-md gap-3">
-            <a
+        <section>
+               <a
                 href="{{ route('customer.orders') }}"
                 wire:navigate
                 class="flex h-13 flex-1 items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 text-sm font-bold text-slate-700"
@@ -961,8 +958,15 @@
 
                 Actualizar
             </button>
+        </section>
+    </main>
+
+    {{-- Barra inferior --}}
+    {{-- <div class="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 p-4 backdrop-blur">
+        <div class="mx-auto flex max-w-md gap-3">
+         
         </div>
-    </div>
+    </div> --}}
 
     @push('scripts')
         <script>
