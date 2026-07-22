@@ -12,7 +12,6 @@ use Livewire\Component;
 use RuntimeException;
 use Throwable;
 
-// #[Layout('components.layouts.mobile')]
 class Wallet extends Component
 {
     public string $amount = '25.00';
