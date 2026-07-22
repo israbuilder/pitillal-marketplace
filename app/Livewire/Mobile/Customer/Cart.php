@@ -32,30 +32,30 @@ public function cartCount(): int
 
     public function increment(string $key): void
     {
-        $cart = session()->get('mobile_cart', []);
+        $cart = session()->get('cart', []);
         if (isset($cart[$key])) {
             $cart[$key]['quantity']++;
-            session()->put('mobile_cart', $cart);
+            session()->put('cart', $cart);
         }
         $this->refreshCart();
     }
 
     public function decrement(string $key): void
     {
-        $cart = session()->get('mobile_cart', []);
+        $cart = session()->get('cart', []);
         if (! isset($cart[$key])) return;
 
         $cart[$key]['quantity']--;
         if ($cart[$key]['quantity'] <= 0) unset($cart[$key]);
-        session()->put('mobile_cart', $cart);
+        session()->put('cart', $cart);
         $this->refreshCart();
     }
 
     public function remove(string $key): void
     {
-        $cart = session()->get('mobile_cart', []);
+        $cart = session()->get('cart', []);
         unset($cart[$key]);
-        session()->put('mobile_cart', $cart);
+        session()->put('cart', $cart);
         $this->refreshCart();
     }
 
