@@ -35,7 +35,7 @@ class Dashboard extends Component
 
     public function render()
     {
-        $orders = $this->business->orders()->with(['user', 'driver'])->latest()->limit(10)->get();
+        $orders = $this->business->orders()->with(['customer', 'driver'])->latest()->limit(10)->get();
 
         return view('livewire.mobile.business.dashboard', compact('orders'))
             ->layout('components.mobile.app', ['title' => 'Mi negocio', 'activeTab' => 'business']);

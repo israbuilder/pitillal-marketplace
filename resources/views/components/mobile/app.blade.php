@@ -22,7 +22,7 @@
                         @csrf 
                         <button class="w-full px-4 py-3 text-left
                             text-red-600 hover:bg-red-50" > 
-                            Cerrar sesión 
+                           <x-heroicon-s-arrow-right-on-rectangle class="h-6 w-6" />
                         </button>
                      </form>
                 </div>
