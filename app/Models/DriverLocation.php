@@ -8,15 +8,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class DriverLocation extends Model
 {
     protected $fillable = [
-        'driver_id', 'order_id', 'latitude', 'longitude', 'accuracy',
-        'heading', 'speed', 'recorded_at',
+        'driver_id', 
+        'order_id', 
+        'lat', 
+        'lng', 
+        'accuracy',
+        'heading', 
+        'speed', 
+        'recorded_at',
     ];
 
     protected function casts(): array
     {
         return [
-            'latitude' => 'float',
-            'longitude' => 'float',
+            'lat' => 'float',
+            'lng' => 'float',
             'accuracy' => 'float',
             'heading' => 'float',
             'speed' => 'float',
@@ -24,6 +30,13 @@ class DriverLocation extends Model
         ];
     }
 
-    public function driver(): BelongsTo { return $this->belongsTo(User::class, 'driver_id'); }
-    public function order(): BelongsTo { return $this->belongsTo(Order::class); }
+    public function driver(): BelongsTo 
+    { 
+        return $this->belongsTo(User::class, 'driver_id');
+     }
+
+    public function order(): BelongsTo 
+    {
+         return $this->belongsTo(Order::class); 
+    }
 }

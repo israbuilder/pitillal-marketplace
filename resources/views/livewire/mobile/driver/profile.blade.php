@@ -34,7 +34,7 @@
         @endif
 
         <section class="overflow-hidden rounded-3xl bg-white shadow-sm">
-            <div class="bg-gradient-to-br from-indigo-600 to-violet-600 px-5 py-8 text-white">
+            <div class="bg-linear-to-br from-indigo-600 to-violet-600 px-5 py-8 text-white">
                 <div class="flex items-center gap-4">
                     <div class="relative shrink-0">
                         @if (
@@ -49,7 +49,7 @@
                             >
                         @elseif ($existingProfilePhoto)
                             <img
-                            
+                                style="width:50px"
                                 src="{{ Storage::disk('public')->url($existingProfilePhoto) }}"
                                 alt="{{ $name }}"
                                 class="h-24 w-24 rounded-full border-4 border-white/30 object-cover shadow-lg"

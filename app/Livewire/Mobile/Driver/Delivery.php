@@ -29,8 +29,8 @@ class Delivery extends Component
         DriverLocation::create([
             'driver_id' => auth()->id(),
             'order_id' => $this->order->id,
-            'latitude' => $latitude,
-            'longitude' => $longitude,
+            'lat' => $latitude,
+            'lng' => $longitude,
             'accuracy' => $accuracy,
             'heading' => $heading,
             'speed' => $speed,
