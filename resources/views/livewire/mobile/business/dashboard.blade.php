@@ -37,7 +37,7 @@
             <h2 class="text-lg font-black text-slate-950">Pedidos recientes</h2>
             <a href="{{ route('business.orders') }}" wire:navigate class="text-sm font-bold text-indigo-600">Ver todos</a>
         </div>
-        <div wire:poll.30s="refreshDashboard" class="space-y-3">
+        <div wire:poll.15s="refreshDashboard" class="space-y-3">
             @forelse($orders as $order)
                 <article class="rounded-3xl bg-white p-4 shadow-sm">
                     <div class="flex justify-between">

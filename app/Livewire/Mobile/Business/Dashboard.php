@@ -9,6 +9,7 @@ use Livewire\Component;
 class Dashboard extends Component
 {
     public Business $business;
+    public $orders;
 
     public function mount(): void
     {
@@ -31,13 +32,8 @@ class Dashboard extends Component
 
 private function loadDashboard(): void
 {
-    $this->business = auth()->user()->business;
-
-    $this->orders = $this->business
-        ->orders()
-        ->latest()
-        ->take(5)
-        ->get();
+    $this->orders = $this->business->orders()->with(['customer', 'driver'])->latest()->limit(10)->get();
+   
 }
 
     #[Computed]

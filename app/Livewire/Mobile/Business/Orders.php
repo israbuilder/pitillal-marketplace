@@ -14,6 +14,7 @@ class Orders extends Component
     public function mount(): void
     {
         $this->business = Business::where('user_id', auth()->id())->firstOrFail();
+         $this->loadDashboard();
     }
 
     public function markReady(Order $order): void
@@ -22,6 +23,25 @@ class Orders extends Component
         abort_unless(in_array($order->status, ['pending', 'accepted'], true), 422);
         $order->update(['status' => 'ready']);
     }
+
+     public function refreshDashboard(): void
+{
+    $this->loadDashboard();
+}
+
+private function loadDashboard(): void
+{
+    // $this->orders = $this->business->orders()->with(['customer', 'driver'])->latest()->limit(10)->get();
+// dd('llegue');   
+
+ $query = $this->business->orders()->with(['items', 'driver'])->latest();
+
+        if ($this->filter === 'active') {
+            $query->whereNotIn('status', ['delivered', 'cancelled']);
+        } elseif ($this->filter !== 'all') {
+            $query->where('status', $this->filter);
+        }
+}
 
     public function render()
     {

@@ -4,8 +4,8 @@
             <button wire:click="$set('filter','{{ $value }}')" class="whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold {{ $filter === $value ? 'bg-slate-950 text-white' : 'bg-white text-slate-600' }}">{{ $label }}</button>
         @endforeach
     </div>
-
-    @forelse($orders as $order)
+<div wire:poll.60s="refreshDashboard" class="mt2">
+     @forelse($orders as $order)
         <article class="rounded-3xl bg-white p-5 shadow-sm">
             <div class="flex justify-between gap-4">
                 <div>
@@ -24,4 +24,6 @@
     @empty
         <p class="rounded-3xl bg-white p-5 text-sm text-slate-500">No hay pedidos en este filtro.</p>
     @endforelse
+</div>
+   
 </div>
