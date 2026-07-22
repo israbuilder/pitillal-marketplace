@@ -1,7 +1,7 @@
 <div>
     <header class="mb-7 pt-3">
         <a href="{{ route('home') }}" wire:navigate class="mb-6 inline-flex items-center gap-2 text-sm font-bold text-slate-500">← Regresar</a>
-        <p class="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600">Nueva cuenta</p>
+        <p class="text-sm font-semibold uppercase tracking-[0.2em]" style="color: #E52471">Nueva cuenta</p>
         <h1 class="mt-2 text-3xl font-black tracking-tight">Comienza ahora</h1>
         <p class="mt-2 text-sm text-slate-500">Selecciona cómo utilizarás la plataforma.</p>
     </header>
@@ -57,7 +57,7 @@
         </label>
         @error('terms') <p class="text-sm font-medium text-red-600">Debes aceptar los términos.</p> @enderror
 
-        <button type="submit" wire:loading.attr="disabled" wire:target="register" class="w-full rounded-2xl bg-indigo-600 px-4 py-4 font-bold text-white shadow-lg shadow-indigo-200 disabled:opacity-60">
+        <button type="submit" style="background: #E52471" wire:loading.attr="disabled" wire:target="register" class="w-full rounded-2xl px-4 py-4 font-bold text-white shadow-lg shadow-indigo-200 disabled:opacity-60">
             <span wire:loading.remove wire:target="register">Crear cuenta</span>
             <span wire:loading wire:target="register">Creando cuenta...</span>
         </button>

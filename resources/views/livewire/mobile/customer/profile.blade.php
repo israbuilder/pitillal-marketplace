@@ -1,7 +1,7 @@
 <div class="space-y-6">
 
     {{-- Header --}}
-    <div class="rounded-3xl bg-libear-to-r from-indigo-600 to-violet-600 p-6 text-white shadow-lg">
+    <div style="background: #E52471" class="rounded-3xl bg-libear-to-r from-indigo-600 to-violet-600 p-6 text-white shadow-lg">
 
         <div class="flex items-center gap-4">
 

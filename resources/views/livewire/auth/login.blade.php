@@ -1,9 +1,9 @@
 <div>
     <header class="mb-8 pt-6">
-        <div class="mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-indigo-600 text-2xl font-black text-white shadow-lg shadow-indigo-200">
-            {{ mb_strtoupper(mb_substr(config('app.name', 'M'), 0, 1)) }}
+        <div style="background: #E52471" class="mb-5 flex h-16 w-16 items-center justify-center rounded-3xl text-2xl font-black text-white shadow-lg shadow-indigo-200">
+            {{ mb_strtoupper(mb_substr(config('app.name', 'M'), 0, 2)) }}
         </div>
-        <p class="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600">Bienvenido</p>
+        <p style="color:#E52471" class="text-sm font-semibold uppercase tracking-[0.2em] ">EL PITILLAL MARKETPLACE</p>
         <h1 class="mt-2 text-3xl font-black tracking-tight">Inicia sesión</h1>
         <p class="mt-2 text-sm leading-6 text-slate-500">Compra, administra tu negocio o entrega pedidos desde una sola plataforma.</p>
     </header>
@@ -26,7 +26,7 @@
         <div>
             <div class="mb-2 flex items-center justify-between gap-4">
                 <label for="password" class="block text-sm font-bold text-slate-700">Contraseña</label>
-                <a href="{{ route('password.request') }}" wire:navigate class="text-sm font-bold text-indigo-600">¿La olvidaste?</a>
+                <a href="{{ route('password.request') }}" wire:navigate style="color:#E52471" class="text-sm font-bold ">¿La olvidaste?</a>
             </div>
             <input id="password" type="password" wire:model="password" autocomplete="current-password"
                    class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-100"
@@ -42,7 +42,8 @@
         <button type="submit"
                 wire:loading.attr="disabled"
                 wire:target="login"
-                class="flex w-full items-center justify-center rounded-2xl bg-indigo-600 px-4 py-4 font-bold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700 disabled:cursor-wait disabled:opacity-60">
+                style="background:#E52471"
+                class="flex w-full items-center justify-center rounded-2xl  px-4 py-4 font-bold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700 disabled:cursor-wait disabled:opacity-60">
             <span wire:loading.remove wire:target="login">Entrar</span>
             <span wire:loading wire:target="login">Verificando...</span>
         </button>
@@ -50,6 +51,6 @@
 
     <p class="mt-8 text-center text-sm text-slate-500">
         ¿Todavía no tienes cuenta?
-        <a href="{{ route('register') }}" wire:navigate class="font-black text-indigo-600">Regístrate</a>
+        <a href="{{ route('register') }}" wire:navigate style="color: #E52471" class="font-black ">Regístrate</a>
     </p>
 </div>

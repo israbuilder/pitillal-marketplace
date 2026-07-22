@@ -16,7 +16,7 @@
             @error('email') <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p> @enderror
         </div>
 
-        <button type="submit" wire:loading.attr="disabled" wire:target="sendResetLink" class="w-full rounded-2xl bg-indigo-600 px-4 py-4 font-bold text-white shadow-lg shadow-indigo-200 disabled:opacity-60">
+        <button type="submit" style="background: #E52471" wire:loading.attr="disabled" wire:target="sendResetLink" class="w-full rounded-2xl px-4 py-4 font-bold text-white shadow-lg shadow-indigo-200 disabled:opacity-60">
             <span wire:loading.remove wire:target="sendResetLink">Enviar enlace</span>
             <span wire:loading wire:target="sendResetLink">Enviando...</span>
         </button>

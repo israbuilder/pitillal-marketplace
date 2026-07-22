@@ -67,7 +67,7 @@ public function cartCount(): int
 
     public function render()
     {
-        return view('livewire.mobile.cart')
+        return view('livewire.mobile.customer.cart')
             ->layout('components.mobile.app', ['title' => 'Carrito', 'activeTab' => 'cart']);
     }
 }

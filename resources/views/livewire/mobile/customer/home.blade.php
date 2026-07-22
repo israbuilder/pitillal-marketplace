@@ -84,7 +84,7 @@
         @endif
 
         {{-- Banner --}}
-        <section class="overflow-hidden rounded-3xl bg-slate-950 p-5 text-white shadow-lg">
+        <section style="background: #E52471" class="overflow-hidden rounded-3xl  p-5 text-white shadow-lg">
             <div class="flex items-center gap-4">
                 <div class="min-w-0 flex-1">
                     <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold">
