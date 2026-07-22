@@ -23,14 +23,14 @@
     <main class="mx-auto max-w-md px-4 py-5">
         {{-- Filtros --}}
         <div class="-mx-4 overflow-x-auto px-4 pb-4">
-            <div class="flex min-w-max gap-2">
+            <div class="flex min-w-max gap-2 mb-5">
                 @foreach ($statuses as $statusValue => $statusName)
                     <button
                         type="button"
                         wire:key="status-{{ $statusValue }}"
                         wire:click="selectStatus('{{ $statusValue }}')"
                         @class([
-                            'rounded-full px-4 py- text-xs font-semibold transition',
+                            'rounded-full px-4 py-2 text-xs font-semibold transition',
                             'bg-slate-900 text-white' => $status === $statusValue,
                             'border border-slate-200 bg-white text-slate-600' => $status !== $statusValue,
                         ])

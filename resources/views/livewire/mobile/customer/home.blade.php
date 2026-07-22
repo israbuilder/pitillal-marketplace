@@ -100,7 +100,7 @@
                     </p>
                 </div>
 
-                <div class="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-orange-500">
+                <div class="flex h-24 w-24 shrink-0 items-center justify-center rounded-full " style="background: #FED5E2">
                     <svg
                         class="h-12 w-12"
                         fill="none"
