@@ -2,7 +2,7 @@
     class="min-h-screen bg-slate-50 pb-28"
     wire:poll.15s
 >
-    <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 px-4 py-4 backdrop-blur">
+    {{-- <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 px-4 py-4 backdrop-blur">
         <div class="mx-auto flex max-w-3xl items-center justify-between">
             <div>
                 <p class="text-xs font-bold uppercase tracking-wider text-indigo-600">
@@ -22,7 +22,7 @@
                 Inicio
             </a>
         </div>
-    </header>
+    </header> --}}
 
     <main class="mx-auto max-w-3xl space-y-5 px-4 py-5">
         @if (session('success'))
@@ -259,7 +259,7 @@
                 aria-label="Cerrar"
             ></button>
 
-            <section class="relative max-h-[92vh] w-full overflow-y-auto rounded-t-[2rem] bg-white p-5 shadow-2xl">
+            <section style="z-index:100" class="relative max-h-[92vh] w-full overflow-y-auto rounded-t-[2xl] bg-white p-5 shadow-2xl">
                 <div class="mx-auto max-w-3xl">
                     <div class="mx-auto mb-5 h-1.5 w-12 rounded-full bg-slate-200"></div>
 
@@ -400,6 +400,7 @@
                         @if ($selectedOrder->driver_id === null)
                             <button
                                 type="button"
+                                style="z-index:100"
                                 wire:click="acceptOrder({{ $selectedOrder->id }})"
                                 class="w-full rounded-2xl bg-indigo-600 py-4 font-black text-white"
                             >
