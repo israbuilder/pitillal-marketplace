@@ -12,7 +12,10 @@ class Dashboard extends Component
 
     public function mount(): void
     {
+
         $this->business = Business::where('user_id', auth()->id())->firstOrFail();
+            $this->loadDashboard();
+
     }
 
     public function toggleOpen(): void
@@ -20,6 +23,22 @@ class Dashboard extends Component
         $this->business->update(['is_open' => ! $this->business->is_open]);
         $this->business->refresh();
     }
+
+    public function refreshDashboard(): void
+{
+    $this->loadDashboard();
+}
+
+private function loadDashboard(): void
+{
+    $this->business = auth()->user()->business;
+
+    $this->orders = $this->business
+        ->orders()
+        ->latest()
+        ->take(5)
+        ->get();
+}
 
     #[Computed]
     public function stats(): array
