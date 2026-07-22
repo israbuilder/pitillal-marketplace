@@ -9,9 +9,39 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <meta name="description"
+          content="Compra productos locales y recibe entregas rápidas con Impulsando Latinos Marketplace.">
 
-     <link href="{{asset('/assets/images/favicon.png')}}" rel="icon">
-      <link href="{{asset('/assets/images/apple-touch-icon.png')}}" rel="apple-touch-icon">
+    <meta name="keywords"
+          content="marketplace, delivery, negocios locales, Houston, compras, restaurantes">
+
+    <meta name="author"
+          content="Impulsando Latinos">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Impulsando Latinos">
+    <meta property="og:title"
+          content="{{ $title ?? config('app.name') }}">
+    <meta property="og:description"
+          content="Compra productos locales y recibe entregas rápidas con Impulsando Latinos Marketplace.">
+    <meta property="og:url"
+          content="{{ url()->current() }}">
+    <meta property="og:image"
+          content="{{ asset('assets/images/share2.jpg') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title"
+          content="{{ $title ?? config('app.name') }}">
+    <meta name="twitter:description"
+          content="Compra productos locales y recibe entregas rápidas con Impulsando Latinos Marketplace.">
+    <meta name="twitter:image"
+          content="{{ asset('images/share.jpg') }}">
+     <link href="{{asset('assets/images/favicon.png')}}" rel="icon">
+      <link href="{{asset('assets/images/apple-touch-icon.png')}}" rel="apple-touch-icon">
 
     @livewireStyles
     
