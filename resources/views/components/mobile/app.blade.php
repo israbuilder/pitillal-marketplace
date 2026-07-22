@@ -17,9 +17,9 @@
             <div class="flex items-center justify-between">
                 <a href="{{ url()->previous() }}" class="grid h-10 w-10 place-items-center rounded-full bg-slate-100" aria-label="Regresar">←</a>
                 <h1 class="text-base font-black">{{ $title ?? 'Marketplace' }}</h1>
-                <div class="h-10 w-10">
+                {{-- <div class="h-10 w-10">
                   
-                </div>
+                </div> --}}
                 <div class="absolute right-0 top-12 z-50 w-56 " >
                       <form method="POST" action="{{ route('logout') }}" > 
                         @csrf 
