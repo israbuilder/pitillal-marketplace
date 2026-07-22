@@ -298,14 +298,14 @@
                                 class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
                             >
                                 <a
-                                    href="{{ route('customer.orders.show', $product) }}"
+                                    href="{{ route('customer.products.show', $product) }}"
                                     wire:navigate
                                     class="block"
                                 >
                                     <div class="aspect-square overflow-hidden bg-slate-100">
                                         @if ($product->image ?? $product->image_path)
                                             <img
-                                                src="storage/{{ $product->image ?? asset('storage/'.$product->image_path) }}"
+                                                src="{{asset('storage/'. $product->image)}}"
                                                 alt="{{ $product->name }}"
                                                 class="h-full w-full object-cover transition duration-300 hover:scale-105"
                                             >

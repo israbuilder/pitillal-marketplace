@@ -8,7 +8,7 @@ class Profile extends Component
 {
     public function render()
     {
-        return view('livewire.mobile.profile')
+        return view('livewire.mobile.customer.profile')
             ->layout('components.mobile.app', ['title' => 'Perfil', 'activeTab' => 'profile']);
     }
 }
