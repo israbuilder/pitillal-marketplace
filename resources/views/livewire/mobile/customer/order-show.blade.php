@@ -928,6 +928,7 @@
                <a
                 href="{{ route('customer.orders') }}"
                 wire:navigate
+                style="margin-bottom: 20px"
                 class="flex h-13 flex-1 items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 text-sm font-bold text-slate-700"
             >
                 Mis pedidos
@@ -938,7 +939,7 @@
                 wire:click="refreshOrder"
                 wire:loading.attr="disabled"
                 wire:target="refreshOrder"
-                class="flex h-13 flex-1 items-center justify-center gap-2 rounded-2xl bg-orange-500 px-4 text-sm font-bold text-white shadow-sm disabled:opacity-60"
+                class="px-2 flex h-13 flex-1 items-center justify-center gap-2 rounded-2xl bg-orange-500 px-4 text-sm font-bold text-white shadow-sm disabled:opacity-60"
             >
                 <svg
                     wire:loading.class="animate-spin"

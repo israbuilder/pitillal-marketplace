@@ -27,7 +27,7 @@
     <meta property="og:url"
           content="{{ url()->current() }}">
     <meta property="og:image"
-          content="{{ asset('/assets/images/share.jpg') }}">
+          content="{{ asset('/images/share.jpg') }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
 
@@ -39,7 +39,8 @@
           content="Compra productos locales y recibe entregas rápidas con Impulsando Latinos Marketplace.">
     <meta name="twitter:image"
           content="{{ asset('images/share.jpg') }}">
-
+ <link href="{{asset('/images/favicon.png')}}" rel="icon">
+      <link href="{{asset('/images/apple-touch-icon.png')}}" rel="apple-touch-icon">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>

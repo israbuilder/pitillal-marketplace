@@ -9,7 +9,12 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+     <link href="{{asset('/assets/images/favicon.png')}}" rel="icon">
+      <link href="{{asset('/assets/images/apple-touch-icon.png')}}" rel="apple-touch-icon">
+
     @livewireStyles
+    
 </head>
 <body class="bg-slate-100 text-slate-950 antialiased">
     <div class="mx-auto min-h-screen max-w-md bg-slate-50 shadow-2xl">
