@@ -81,13 +81,13 @@ class StripeDriverWalletService
                 ],
 
                 'success_url' => route(
-                    'driver.wallet.success',
+                    'wallet.success',
                     [],
                     true
                 ) . '?session_id={CHECKOUT_SESSION_ID}',
 
                 'cancel_url' => route(
-                    'driver.wallet.index',
+                    'wallet.index',
                     ['cancelled' => 1],
                     true
                 ),

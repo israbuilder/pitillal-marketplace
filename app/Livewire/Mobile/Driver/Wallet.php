@@ -17,6 +17,7 @@ class Wallet extends Component
     public string $amount = '25.00';
 
     public array $presetAmounts = [
+        1,
         10,
         25,
         50,
@@ -38,9 +39,9 @@ class Wallet extends Component
         $this->amount = number_format($amount, 2, '.', '');
     }
 
-    public function purchaseBalance(
-        StripeDriverWalletService $stripeWalletService,
-    ) {
+    public function purchaseBalance( StripeDriverWalletService $stripeWalletService,)
+ {
+   
         $validated = $this->validate([
             'amount' => [
                 'required',
@@ -92,8 +93,9 @@ class Wallet extends Component
             report($exception);
 
             $this->addError(
+                
                 'amount',
-                'We could not start the payment. Please try again.'
+                'We could not start the payment. Please try again.'.$exception
             );
 
             return null;
