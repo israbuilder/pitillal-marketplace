@@ -40,16 +40,16 @@
     <meta name="twitter:description"
           content="Compra productos locales y recibe entregas rápidas con Impulsando Latinos Marketplace.">
     <meta name="twitter:image"
-          content="{{ asset('images/share.jpg') }}">
+          content="{{ asset('assets/images/share.jpg') }}">
     <link
         rel="icon"
         type="image/png"
-        href="{{ asset('images/favicon.png') }}"
+        href="{{ asset('asstes/images/favicon.png') }}"
     >
 
     <link
         rel="apple-touch-icon"
-        href="{{ asset('images/apple-touch-icon.png') }}"
+        href="{{ asset('assets/images/apple-touch-icon.png') }}"
     >
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
