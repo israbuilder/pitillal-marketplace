@@ -2,7 +2,7 @@
     <div class="mx-auto max-w-xl px-4 py-6">
         <header class="mb-6">
             <p class="text-sm font-semibold text-slate-500">
-                Driver wallet
+                Monedero del Conductor
             </p>
 
             <h1 class="text-2xl font-black text-slate-900">
@@ -14,7 +14,7 @@
             <div
                 class="mb-5 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-800"
             >
-                The payment was cancelled. Your wallet was not charged.
+                El pago fué cancelado. Su mondero no se recargo.
             </div>
         @endif
 
@@ -22,7 +22,7 @@
             class="mb-6 overflow-hidden rounded-3xl bg-slate-950 p-6 text-white shadow-xl"
         >
             <p class="text-sm font-semibold text-slate-300">
-                Available balance
+                Balance Disponible
             </p>
 
             <div class="mt-2 text-4xl font-black tracking-tight">
@@ -30,17 +30,17 @@
             </div>
 
             <p class="mt-3 text-sm text-slate-400">
-                This balance is used when you accept delivery orders.
+                This balance es usado para aceptar viajes.
             </p>
         </section>
 
         <section class="mb-6 rounded-3xl bg-white p-5 shadow-sm">
             <h2 class="text-lg font-black text-slate-900">
-                Add balance
+                Agregar Balance
             </h2>
 
             <p class="mt-1 text-sm text-slate-500">
-                Select an amount or enter a custom amount.
+                Selecciona la cantidad ó entra la cantidad deseada.
             </p>
 
             <div class="mt-4 grid grid-cols-4 gap-2">
@@ -66,7 +66,7 @@
                     for="amount"
                     class="mb-2 block text-sm font-bold text-slate-700"
                 >
-                    Amount
+                    Cantidad
                 </label>
 
                 <div class="relative">
@@ -103,14 +103,14 @@
                         wire:loading.remove
                         wire:target="purchaseBalance"
                     >
-                        Continue to secure payment
+                        Continuar Pago Seguro
                     </span>
 
                     <span
                         wire:loading
                         wire:target="purchaseBalance"
                     >
-                        Opening Stripe...
+                        Abriendo Pasarela de Pago...
                     </span>
                 </button>
             </form>
@@ -119,11 +119,11 @@
         <section class="rounded-3xl bg-white p-5 shadow-sm">
             <div class="mb-4 flex items-center justify-between">
                 <h2 class="text-lg font-black text-slate-900">
-                    Recent activity
+                    Atividad reciente
                 </h2>
 
                 <span class="text-xs font-bold text-slate-400">
-                    Last 25
+                    Últimos 25
                 </span>
             </div>
 
@@ -148,7 +148,7 @@
                                 {{ $transaction->created_at->format('M j, Y g:i A') }}
 
                                 @if ($transaction->order_id)
-                                    · Order #{{ $transaction->order_id }}
+                                    · Orden #{{ $transaction->order_id }}
                                 @endif
                             </p>
                         </div>
@@ -178,7 +178,7 @@
                 @empty
                     <div class="rounded-2xl bg-slate-50 p-6 text-center">
                         <p class="text-sm font-bold text-slate-500">
-                            No wallet activity yet.
+                           Sin actividad de Monedero aún.
                         </p>
                     </div>
                 @endforelse
