@@ -43,6 +43,20 @@ class StripeDriverWalletService
             $session = $this->stripe->checkout->sessions->create([
                 'mode' => 'payment',
 
+                'locale' => 'es',
+
+                 'payment_method_types' => [
+                'card',
+            ],
+
+                 'phone_number_collection' => [
+                'enabled' => false,
+            ],  
+
+                 'managed_payments' => [
+                'enabled' => false,
+            ],
+
                 'customer_email' => $driver->email,
 
                 'client_reference_id' => (string) $topUp->id,
@@ -50,12 +64,12 @@ class StripeDriverWalletService
                 'line_items' => [
                     [
                         'price_data' => [
-                            'currency' => $wallet->currency,
+                            'currency' => 'mxn',
                             'unit_amount' => $amountCents,
                             'product_data' => [
-                                'name' => 'Driver wallet balance',
+                                'name' => 'Recarga de saldo',
                                 'description' => sprintf(
-                                    'Wallet credit for %s',
+                                    'Saldo para la cuenta de repartidor de %s',
                                     $driver->name
                                 ),
                             ],

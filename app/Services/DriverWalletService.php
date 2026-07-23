@@ -23,7 +23,7 @@ class DriverWalletService
             ],
             [
                 'balance_cents' => 0,
-                'currency' => 'usd',
+                'currency' => 'mxn',
             ]
         );
     }
