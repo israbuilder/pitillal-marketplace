@@ -46,21 +46,6 @@ Route::middleware('guest')->group(function (): void {
         ->name('password.reset');
 });
 
-
-// Route::get('/app', function () {
-//     if (! Auth::check()) {
-//         return redirect()->route('login');
-//     }
-
-//     return match (Auth::user()->role) {
-//         'customer' => redirect()->route('customer.home'),
-//         'business' => redirect()->route('business.dashboard'),
-//         'driver' => redirect()->route('driver.dashboard'),
-//         default => abort(403, 'El usuario no tiene un rol válido.'),
-//     };
-// })->name('home');
-
-
 Route::post('/logout', function () {
     Auth::logout();
 
