@@ -60,7 +60,7 @@ class Orders extends Component
                 'pending',
                 'ready',
                 'preparing',
-                'ready_for_pickup',
+                
             ])
             ->latest()
             ->get();
@@ -78,7 +78,7 @@ class Orders extends Component
             ->where('driver_id', Auth::id())
             ->whereIn('status', [
                 'accepted',
-                'ready_for_pickup',
+                'ready',
                 'picked_up',
                 'on_the_way',
             ])
@@ -168,7 +168,7 @@ class Orders extends Component
             if (! in_array($order->status, [
                 'pending',
                 'preparing',
-                'ready_for_pickup',
+                'ready',
             ], true)) {
                 $this->addError(
                     'order',
