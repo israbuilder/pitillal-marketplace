@@ -6,12 +6,9 @@ use App\Models\Order;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Title('Mis pedidos')]
 class Orders extends Component
 {
     use WithPagination;
@@ -27,7 +24,7 @@ class Orders extends Component
         'awaiting_payment' => 'Esperando pago',
         'pending' => 'Pendientes',
         'accepted' => 'Aceptados',
-        'ready_for_pickup' => 'Listos',
+        'ready' => 'Listos',
         'driver_assigned' => 'Driver asignado',
         'picked_up' => 'Recogidos',
         'on_the_way' => 'En camino',
