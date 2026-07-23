@@ -14,14 +14,14 @@ use Throwable;
 
 class Wallet extends Component
 {
-    public string $amount = '25.00';
+    public string $amount = '500.00';
 
     public array $presetAmounts = [
-        1,
-        10,
-        25,
-        50,
-        100,
+        1,        
+        500,
+        1000,
+        2000,
+        5000,
     ];
 
     public function mount(
