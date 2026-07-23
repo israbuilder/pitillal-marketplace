@@ -44,7 +44,7 @@
     <link
         rel="icon"
         type="image/png"
-        href="{{ asset('asstes/images/favicon.png') }}"
+        href="{{ asset('assets/images/favicon.png') }}"
     >
 
     <link
