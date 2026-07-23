@@ -58,6 +58,7 @@ class Orders extends Component
             ->whereNull('driver_id')
             ->whereIn('status', [
                 'pending',
+                'ready',
                 'preparing',
                 'ready_for_pickup',
             ])

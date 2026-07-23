@@ -1,28 +1,7 @@
 <div
     class="min-h-screen bg-slate-50 pb-28"
-    wire:poll.15s
->
-    {{-- <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 px-4 py-4 backdrop-blur">
-        <div class="mx-auto flex max-w-3xl items-center justify-between">
-            <div>
-                <p class="text-xs font-bold uppercase tracking-wider text-indigo-600">
-                    Driver
-                </p>
+    wire:poll.15s>
 
-                <h1 class="text-xl font-black text-slate-900">
-                    Órdenes
-                </h1>
-            </div>
-
-            <a
-                href="{{ route('driver.dashboard') }}"
-                wire:navigate
-                class="rounded-2xl bg-slate-100 px-4 py-2 text-sm font-bold text-slate-700"
-            >
-                Inicio
-            </a>
-        </div>
-    </header> --}}
 
     <main class="mx-auto max-w-3xl space-y-5 px-4 py-5">
         @if (session('success'))
