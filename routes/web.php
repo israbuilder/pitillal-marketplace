@@ -25,40 +25,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StripeDriverWalletWebhookController;
 
-/*
-|--------------------------------------------------------------------------
-| Ruta principal
-|--------------------------------------------------------------------------
-|
-| No debe estar dentro del middleware guest.
-| Si el usuario no está autenticado, lo envía al login.
-| Si ya está autenticado, lo envía según su role.
-|
-*/
-
 Route::post(
     '/stripe/webhooks/driver-wallet',
     StripeDriverWalletWebhookController::class
 )->name('stripe.webhooks.driver-wallet');
 
-Route::get('/', function () {
-    if (! Auth::check()) {
-        return redirect()->route('login');
-    }
-
-    return match (Auth::user()->role) {
-        'customer' => redirect()->route('customer.home'),
-        'business' => redirect()->route('business.dashboard'),
-        'driver' => redirect()->route('driver.dashboard'),
-        default => abort(403, 'El usuario no tiene un rol válido.'),
-    };
-})->name('home');
-
-/*
-|--------------------------------------------------------------------------
-| Rutas para invitados
-|--------------------------------------------------------------------------
-*/
+Route::view('/', 'inicio')->name('landing');
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', Login::class)
@@ -74,11 +46,20 @@ Route::middleware('guest')->group(function (): void {
         ->name('password.reset');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Cerrar sesión
-|--------------------------------------------------------------------------
-*/
+
+// Route::get('/app', function () {
+//     if (! Auth::check()) {
+//         return redirect()->route('login');
+//     }
+
+//     return match (Auth::user()->role) {
+//         'customer' => redirect()->route('customer.home'),
+//         'business' => redirect()->route('business.dashboard'),
+//         'driver' => redirect()->route('driver.dashboard'),
+//         default => abort(403, 'El usuario no tiene un rol válido.'),
+//     };
+// })->name('home');
+
 
 Route::post('/logout', function () {
     Auth::logout();
@@ -89,18 +70,8 @@ Route::post('/logout', function () {
     return redirect()->route('login');
 })->middleware('auth')->name('logout');
 
-/*
-|--------------------------------------------------------------------------
-| Rutas autenticadas
-|--------------------------------------------------------------------------
-*/
 
 Route::middleware('auth')->group(function (): void {
-    /*
-    |--------------------------------------------------------------------------
-    | Cliente
-    |--------------------------------------------------------------------------
-    */
 
     Route::get('/app', CustomerHome::class)
         ->name('customer.home');
@@ -123,12 +94,6 @@ Route::middleware('auth')->group(function (): void {
         Route::get('/app/orders/{order}', CustomerOrderShow::class)
     ->name('customer.orders.show');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Negocio
-    |--------------------------------------------------------------------------
-    */
-
     Route::get('/business', BusinessDashboard::class)
         ->name('business.dashboard');
 
@@ -139,12 +104,6 @@ Route::middleware('auth')->group(function (): void {
         ->name('business.profile');
           Route::get('/business/products', BusinessProducts::class)
         ->name('business.products');
-
-    /*
-    |--------------------------------------------------------------------------
-    | Driver
-    |--------------------------------------------------------------------------
-    */
 
     Route::get('/driver', DriverDashboard::class)
         ->name('driver.dashboard');

@@ -1,6 +1,6 @@
 <div>
     <header class="mb-7 pt-3">
-        <a href="{{ route('home') }}" wire:navigate class="mb-6 inline-flex items-center gap-2 text-sm font-bold text-slate-500">← Regresar</a>
+        <a href="{{ route('login') }}" wire:navigate class="mb-6 inline-flex items-center gap-2 text-sm font-bold text-slate-500">← Regresar</a>
         <p class="text-sm font-semibold uppercase tracking-[0.2em]" style="color: #E52471">Nueva cuenta</p>
         <h1 class="mt-2 text-3xl font-black tracking-tight">Comienza ahora</h1>
         <p class="mt-2 text-sm text-slate-500">Selecciona cómo utilizarás la plataforma.</p>

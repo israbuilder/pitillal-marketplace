@@ -1,5 +1,5 @@
 <div class="space-y-5">
-    <section class="rounded-3xl bg-gradient-to-br from-indigo-600 to-violet-700 p-5 text-white shadow-lg">
+    <section class="rounded-3xl bg-linear-to-br from-indigo-600 to-violet-700 p-5 text-white shadow-lg">
         <p class="text-sm text-indigo-100">Entrega rápida en tu ciudad</p>
         <h2 class="mt-1 text-2xl font-bold">Compra local. Recibe hoy.</h2>
         <div class="mt-4 rounded-2xl bg-white p-2">
