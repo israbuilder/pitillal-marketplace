@@ -18,14 +18,14 @@
                 'progress' => 20,
             ],
 
-            'ready_for_driver' => [
+            'ready' => [
                 'label' => 'Buscando conductor',
-                'description' => 'Estamos buscando un conductor para tu pedido.',
+                'description' => 'El Negocio tiene listo su producto, Estamos buscando un conductor para tu pedido.',
                 'class' => 'bg-blue-100 text-blue-700',
                 'progress' => 20,
             ],
 
-            'driver_assigned' => [
+            'accepted' => [
                 'label' => 'Conductor asignado',
                 'description' => 'Un conductor aceptó tu pedido.',
                 'class' => 'bg-indigo-100 text-indigo-700',
@@ -39,7 +39,7 @@
                 'progress' => 65,
             ],
 
-            'out_for_delivery' => [
+            'on_the_way' => [
                 'label' => 'En camino',
                 'description' => 'Tu pedido está en camino.',
                 'class' => 'bg-orange-100 text-orange-700',
@@ -117,13 +117,13 @@
             ],
 
             [
-                'status' => 'driver_assigned',
+                'status' => 'accepted',
                 'label' => 'Conductor asignado',
                 'description' => 'Un conductor aceptó el pedido.',
                 'completed' => in_array($order->status, [
-                    'driver_assigned',
+                    'accepted',
                     'picked_up',
-                    'out_for_delivery',
+                    'on_the_way',
                     'delivered',
                 ], true),
             ],
@@ -134,17 +134,17 @@
                 'description' => 'El conductor recogió los productos.',
                 'completed' => in_array($order->status, [
                     'picked_up',
-                    'out_for_delivery',
+                    'on_the_way',
                     'delivered',
                 ], true),
             ],
 
             [
-                'status' => 'out_for_delivery',
+                'status' => 'on_the_way',
                 'label' => 'En camino',
                 'description' => 'El conductor va hacia tu dirección.',
                 'completed' => in_array($order->status, [
-                    'out_for_delivery',
+                    'on_the_way',
                     'delivered',
                 ], true),
             ],
@@ -160,7 +160,7 @@
         $showTrackingMap = in_array($order->status, [
             'driver_assigned',
             'picked_up',
-            'out_for_delivery',
+            'on_the_way',
         ], true);
 
         $driverLatitude = $order->driver_latitude ?? null;
@@ -544,7 +544,7 @@
                         <div class="relative flex gap-4">
                             @if (! $loop->last)
                                 <div
-                                    class="absolute left-[15px] top-8 h-[calc(100%-10px)] w-0.5 {{ $step['completed'] ? 'bg-emerald-500' : 'bg-slate-200' }}"
+                                    class="absolute left-3.75 top-8 h-[calc(100%-10px)] w-0.5 {{ $step['completed'] ? 'bg-emerald-500' : 'bg-slate-200' }}"
                                 ></div>
                             @endif
 
@@ -939,7 +939,7 @@
                 wire:click="refreshOrder"
                 wire:loading.attr="disabled"
                 wire:target="refreshOrder"
-                class="px-2 flex h-13 flex-1 items-center justify-center gap-2 rounded-2xl bg-orange-500 px-4 text-sm font-bold text-white shadow-sm disabled:opacity-60"
+                class="flex h-13 flex-1 items-center justify-center gap-2 rounded-2xl bg-orange-500 px-4 text-sm font-bold text-white shadow-sm disabled:opacity-60"
             >
                 <svg
                     wire:loading.class="animate-spin"

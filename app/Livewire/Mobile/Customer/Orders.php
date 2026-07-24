@@ -106,7 +106,7 @@ class Orders extends Component
             'awaiting_payment' => 'bg-amber-100 text-amber-700',
             'pending' => 'bg-yellow-100 text-yellow-700',
             'accepted' => 'bg-blue-100 text-blue-700',
-            'ready_for_pickup' => 'bg-indigo-100 text-indigo-700',
+            'ready' => 'bg-indigo-100 text-indigo-700',
             'driver_assigned' => 'bg-violet-100 text-violet-700',
             'picked_up' => 'bg-purple-100 text-purple-700',
             'on_the_way' => 'bg-cyan-100 text-cyan-700',

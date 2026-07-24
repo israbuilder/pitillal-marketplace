@@ -207,7 +207,7 @@ class Orders extends Component
         abort_unless(
             in_array($order->status, [
                 'accepted',
-                'ready_for_pickup',
+                'ready',
             ], true),
             422,
             'La orden todavía no puede marcarse como recogida.'
@@ -262,7 +262,7 @@ class Orders extends Component
 
         $order->update([
             'driver_id' => null,
-            'status' => 'ready_for_pickup',
+            'status' => 'ready',
         ]);
 
         $this->closeDetails();

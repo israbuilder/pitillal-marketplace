@@ -31,12 +31,13 @@ class Order extends Model
     protected $casts = [
         'delivery_lat' => 'float',
         'delivery_lng' => 'float',
-    'delivery_address' => 'array',
-    'subtotal' => 'decimal:2',
-    'delivery_fee' => 'decimal:2',
-    'total' => 'decimal:2',
-     'driver_acceptance_fee_cents' => 'integer',
-            'driver_fee_charged_at' => 'datetime',
+        'delivery_address' => 'array',
+        'subtotal' => 'decimal:2',
+        'delivery_fee' => 'decimal:2',
+        'total' => 'decimal:2',
+        'driver_acceptance_fee_cents' => 'integer',
+        'driver_fee_charged_at' => 'datetime',
+        'delivered_at' => 'datetime',
 ];
 
     public function customer()
@@ -61,14 +62,7 @@ class Order extends Model
 
       public function getDriverAcceptanceFeeCents(): int
     {
-        if ($this->driver_acceptance_fee_cents > 0) {
-            return $this->driver_acceptance_fee_cents;
-        }
-
-        return config(
-            'services.driver_wallet.default_acceptance_fee_cents',
-            500
-        );
+            return (int) $this->driver_acceptance_fee_cents;
     }
 
     public function getFormattedDriverAcceptanceFeeAttribute(): string

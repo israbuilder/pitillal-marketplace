@@ -101,7 +101,7 @@
                                     class="shrink-0 rounded-full px-3 py-1 text-xs font-black
                                         @class([
                                             'bg-amber-100 text-amber-700' => in_array($order->status, ['pending', 'preparing']),
-                                            'bg-blue-100 text-blue-700' => in_array($order->status, ['ready_for_pickup', 'accepted']),
+                                            'bg-blue-100 text-blue-700' => in_array($order->status, ['ready', 'accepted']),
                                             'bg-purple-100 text-purple-700' => $order->status === 'picked_up',
                                             'bg-emerald-100 text-emerald-700' => $order->status === 'delivered',
                                             'bg-slate-100 text-slate-700' => $order->status === 'cancelled',
@@ -110,7 +110,7 @@
                                     {{ match ($order->status) {
                                         'pending' => 'Pendiente',
                                         'preparing' => 'Preparando',
-                                        'ready_for_pickup' => 'Listo',
+                                        'ready' => 'Listo',
                                         'accepted' => 'Aceptado',
                                         'picked_up' => 'En camino',
                                         'delivered' => 'Entregado',
@@ -141,7 +141,8 @@
                                     </p>
                                 </div>
 
-
+@if ($order->status !== 'pending' && $order->status !== 'ready')
+    
                                <a
                                     wire:navigate
                                     href="{{ route('driver.delivery', ['order' => $order->id]) }}"
@@ -149,6 +150,7 @@
                                 >
                                     Delivery
                                 </a>
+@endif
 
                                 <button
                                     type="button"
@@ -173,7 +175,7 @@
 
                             @if ($tab === 'active')
                                 <div class="mt-4 grid gap-2">
-                                    @if (in_array($order->status, ['accepted', 'ready_for_pickup']))
+                                    @if (in_array($order->status, ['accepted', 'ready']))
                                         <button
                                             type="button"
                                             wire:click="markPickedUp({{ $order->id }})"
@@ -386,7 +388,7 @@
                                 Aceptar orden
                             </button>
                         @elseif ($selectedOrder->driver_id === auth()->id())
-                            @if (in_array($selectedOrder->status, ['accepted', 'ready_for_pickup']))
+                            @if (in_array($selectedOrder->status, ['accepted', 'ready']))
                                 <button
                                     type="button"
                                     wire:click="markPickedUp({{ $selectedOrder->id }})"

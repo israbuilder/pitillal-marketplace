@@ -26,11 +26,12 @@
             </p>
 
             <div class="mt-2 text-4xl font-black tracking-tight">
+               
                 {{ $wallet->formatted_balance }}
             </div>
 
             <p class="mt-3 text-sm text-slate-400">
-                This balance es usado para aceptar viajes.
+                Este balance es usado para aceptar viajes.
             </p>
         </section>
 

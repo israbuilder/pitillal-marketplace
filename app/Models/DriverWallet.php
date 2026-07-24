@@ -46,6 +46,6 @@ class DriverWallet extends Model
 
     public function getFormattedBalanceAttribute(): string
     {
-        return '$' . number_format($this->balance_cents / 100, 2);
+        return '$' . number_format($this->balance_cents / 100, 2). ' MXN';
     }
 }

@@ -105,14 +105,16 @@ class DriverWalletService
     }
 
     public function acceptOrder(
+        
         User $driver,
         Order $order,
     ): Order {
+      
         $this->ensureDriver($driver);
 
         return DB::transaction(function () use (
             $driver,
-            $order
+            $order,
         ): Order {
             /*
              * Se bloquea el pedido para evitar que dos conductores
@@ -123,25 +125,6 @@ class DriverWalletService
                 ->lockForUpdate()
                 ->firstOrFail();
 
-            if ($lockedOrder->driver_id !== null) {
-                throw new RuntimeException(
-                    'This order has already been accepted by another driver.'
-                );
-            }
-
-            /*
-             * Ajusta esta lista según tus estados reales.
-             */
-            if (! in_array($lockedOrder->status, [
-                'pending',
-                'available',
-                'ready_for_driver',
-            ], true)) {
-                throw new RuntimeException(
-                    'This order is not available for acceptance.'
-                );
-            }
-
             $wallet = DriverWallet::query()
                 ->where('user_id', $driver->id)
                 ->lockForUpdate()
@@ -151,7 +134,7 @@ class DriverWalletService
                 $wallet = DriverWallet::query()->create([
                     'user_id' => $driver->id,
                     'balance_cents' => 0,
-                    'currency' => 'usd',
+                    'currency' => 'mxn',
                 ]);
 
                 /*
@@ -166,6 +149,7 @@ class DriverWalletService
             $feeCents = $lockedOrder->getDriverAcceptanceFeeCents();
 
             if ($wallet->balance_cents < $feeCents) {
+                
                 throw new InsufficientDriverBalanceException(
                     requiredCents: $feeCents,
                     availableCents: $wallet->balance_cents,
@@ -175,17 +159,18 @@ class DriverWalletService
             $before = $wallet->balance_cents;
             $after = $before - $feeCents;
 
-            $wallet->update([
-                'balance_cents' => $after,
-            ]);
+            $wallet->balance_cents = $after;
+            $wallet->save();    
+        
+            
 
             $lockedOrder->update([
                 'driver_id' => $driver->id,
                 'status' => 'accepted',
-                'driver_fee_charged_at' => now(),
+                // 'driver_fee_charged_at' => now(),
             ]);
 
-            DriverWalletTransaction::query()->create([
+           DriverWalletTransaction::query()->create([
                 'driver_wallet_id' => $wallet->id,
                 'order_id' => $lockedOrder->id,
                 'type' => DriverWalletTransaction::TYPE_DEBIT,

@@ -276,7 +276,7 @@ class Profile extends Component
         return $this->driverOrdersQuery()
             ->whereIn('status', [
                 'accepted',
-                'ready_for_pickup',
+                'ready',
                 'picked_up',
             ])
             ->count();
