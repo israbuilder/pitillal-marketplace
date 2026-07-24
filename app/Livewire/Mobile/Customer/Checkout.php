@@ -42,6 +42,10 @@ class Checkout extends Component
 
     public string $notes = '';
 
+    public float $latitude;
+
+    public float $longitude;
+
     /**
      * Método de pago.
      */
@@ -158,6 +162,14 @@ class Checkout extends Component
                 'max:1000',
             ],
 
+            'longitude' => [
+                'required',
+            ],
+
+              'latitude' => [
+                'required',
+            ],
+
             'paymentMethod' => [
                 'required',
                 Rule::in([
@@ -182,6 +194,8 @@ class Checkout extends Component
             'zipCode.required' => 'Escribe el código postal.',
             'paymentMethod.required' => 'Selecciona un método de pago.',
             'paymentMethod.in' => 'El método de pago seleccionado no es válido.',
+            'longitude' => '"Presiona el botón para obtener ubicación" ',
+            'latitude' => 'Necesitamos tu ubicacion'
         ];
     }
 
@@ -345,6 +359,10 @@ class Checkout extends Component
                     'payment_method' => $this->paymentMethod,
 
                     'delivery_address' => trim($this->address),
+
+                    'delivery_lat' => $this->latitude,
+
+                    'delivery_lng' => $this->longitude,
 
                     'notes' => trim($this->notes) ?: null,
 

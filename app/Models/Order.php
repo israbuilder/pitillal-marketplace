@@ -45,11 +45,6 @@ class Order extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function orders()
-{
-    return $this->hasMany(Order::class);
-}
-
     public function business()
     {
         return $this->belongsTo(Business::class);

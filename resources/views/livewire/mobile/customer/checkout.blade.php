@@ -173,6 +173,26 @@
                             {{ $message }}
                         </p>
                     @enderror
+ <button
+    type="button"
+    onclick="getCurrentLocation()"
+    class="w-full rounded-2xl bg-slate-100 py-3 font-bold"
+>
+    📍 Usar mi ubicación actual
+</button>
+                    <input wire:model="latitude" placeholder="Latitud" class="rounded-2xl border-slate-200 bg-slate-50">
+                      @error('latitude')
+                        <p class="mt-1 text-xs text-red-600">
+                            {{ $message }}
+                        </p>
+                    @enderror
+            <input wire:model="longitude" placeholder="Longitud" class="rounded-2xl border-slate-200 bg-slate-50">
+           
+                     @error('longitude')
+                        <p class="mt-1 text-xs text-red-600">
+                            {{ $message }}
+                        </p>
+                    @enderror
                 </div>
 
                 <div>
@@ -409,4 +429,29 @@
            
         </div>
     </div>
+    <script>
+function getCurrentLocation() {
+
+    if (!navigator.geolocation) {
+        alert("Tu navegador no soporta geolocalización.");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position){
+
+            @this.set('latitude', position.coords.latitude);
+            @this.set('longitude', position.coords.longitude);
+
+        },
+
+        function(error){
+            alert("No fue posible obtener tu ubicación.");
+        }
+
+    );
+
+}
+</script>
 </div>

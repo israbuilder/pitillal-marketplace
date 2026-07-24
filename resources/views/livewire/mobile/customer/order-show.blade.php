@@ -6,7 +6,7 @@
         $statusConfig = [
             'awaiting_payment' => [
                 'label' => 'Esperando pago',
-                'description' => 'Completa el pago para continuar con tu pedido.',
+                'description' => 'Completa el pago para continuar con su pedido.',
                 'class' => 'bg-amber-100 text-amber-700',
                 'progress' => 5,
             ],
@@ -163,11 +163,12 @@
             'on_the_way',
         ], true);
 
-        $driverLatitude = $order->driver_latitude ?? null;
-        $driverLongitude = $order->driver_longitude ?? null;
+        $driverLatitude = $order->driver->latestLocation->lat ?? null;
+        $driverLongitude = $order->driver->latestLocation->lng ?? null;
 
-        $deliveryLatitude = $order->delivery_latitude ?? null;
-        $deliveryLongitude = $order->delivery_longitude ?? null;
+        $deliveryLatitude = $order->delivery_lat ?? null;
+        $deliveryLongitude = $order->delivery_lng ?? null;
+       
     @endphp
 
     {{-- Encabezado --}}
@@ -367,6 +368,7 @@
                     <div
                         id="delivery-map"
                         wire:ignore
+                        data-delivery-map
                         class="h-80 w-full bg-slate-200"
                         data-driver-latitude="{{ $driverLatitude }}"
                         data-driver-longitude="{{ $driverLongitude }}"
@@ -381,7 +383,7 @@
                         </div>
                     </div>
                 @else
-                    <div class="flex h-72 flex-col items-center justify-center bg-slate-100 px-6 text-center">
+                    <div class="flex h-72 flex-col items-center jtify-center bg-slate-100 px-6 text-center">
                         <div class="flex h-16 w-16 items-center justify-center rounded-full bg-white text-slate-400 shadow-sm">
                             <svg
                                 class="h-8 w-8"
@@ -416,7 +418,7 @@
                 @endif
             </section>
         @elseif (
-            in_array($order->status, ['pending', 'ready_for_driver'], true)
+            in_array($order->status, ['pending', 'ready'], true)
         )
             <section class="rounded-3xl border border-blue-200 bg-blue-50 p-6 text-center">
                 <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white text-blue-500 shadow-sm">
@@ -450,9 +452,9 @@
             <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center gap-4">
                     <div class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-orange-100 text-xl font-extrabold text-orange-600">
-                        @if ($order->driver->avatar)
+                        @if ($order->driver->driverProfile?->profile_photo)
                             <img
-                                src="{{ asset('storage/'.$order->driver->avatar) }}"
+                                src="{{ asset('storage/'.$order->driver->driverProfile?->profile_photo) }}"
                                 alt="{{ $order->driver->name }}"
                                 class="h-full w-full object-cover"
                             >
@@ -970,181 +972,268 @@
     </div> --}}
 
     @push('scripts')
-        <script>
-            (() => {
-                let deliveryMap = null;
-                let driverMarker = null;
-                let deliveryMarker = null;
-                let routeLine = null;
+      @script
+<script>
+    let deliveryMap = null;
+    let driverMarker = null;
+    let deliveryMarker = null;
+    let routeLine = null;
 
-                function getCoordinates(element) {
-                    if (!element) {
-                        return null;
-                    }
+    function initializeDeliveryMap() {
+        const mapElement = $wire.$el.querySelector(
+            '[data-delivery-map]'
+        );
 
-                    const driverLatitude = Number(
-                        element.dataset.driverLatitude
-                    );
+        if (!mapElement) {
+            return;
+        }
 
-                    const driverLongitude = Number(
-                        element.dataset.driverLongitude
-                    );
+        const driverLatitude = Number.parseFloat(
+            mapElement.dataset.driverLatitude
+        );
 
-                    const deliveryLatitude = Number(
-                        element.dataset.deliveryLatitude
-                    );
+        const driverLongitude = Number.parseFloat(
+            mapElement.dataset.driverLongitude
+        );
 
-                    const deliveryLongitude = Number(
-                        element.dataset.deliveryLongitude
-                    );
+        const deliveryLatitude = Number.parseFloat(
+            mapElement.dataset.deliveryLatitude
+        );
 
-                    if (
-                        Number.isNaN(driverLatitude) ||
-                        Number.isNaN(driverLongitude)
-                    ) {
-                        return null;
-                    }
+        const deliveryLongitude = Number.parseFloat(
+            mapElement.dataset.deliveryLongitude
+        );
 
-                    return {
-                        driver: {
-                            lat: driverLatitude,
-                            lng: driverLongitude,
-                        },
+        console.log('Driver coordinates:', {
+            latitude: driverLatitude,
+            longitude: driverLongitude,
+        });
 
-                        delivery: (
-                            !Number.isNaN(deliveryLatitude) &&
-                            !Number.isNaN(deliveryLongitude)
-                        ) ? {
-                            lat: deliveryLatitude,
-                            lng: deliveryLongitude,
-                        } : null,
-                    };
+        console.log('Delivery coordinates:', {
+            latitude: deliveryLatitude,
+            longitude: deliveryLongitude,
+        });
+
+        if (
+            !Number.isFinite(driverLatitude) ||
+            !Number.isFinite(driverLongitude)
+        ) {
+            console.error('Las coordenadas del driver no son válidas.');
+
+            return;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Evitar inicializar dos veces el mismo elemento
+        |--------------------------------------------------------------------------
+        */
+
+        if (mapElement._leaflet_id) {
+            return;
+        }
+
+        deliveryMap = L.map(mapElement, {
+            zoomControl: true,
+            attributionControl: true,
+        }).setView(
+            [driverLatitude, driverLongitude],
+            15
+        );
+
+        L.tileLayer(
+            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            {
+                maxZoom: 19,
+                attribution:
+                    '&copy; OpenStreetMap contributors',
+            }
+        ).addTo(deliveryMap);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Marcador del driver
+        |--------------------------------------------------------------------------
+        */
+
+        const driverIcon = L.divIcon({
+            className: '',
+            html: `
+                <div style="
+                    width: 42px;
+                    height: 42px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 9999px;
+                    background: #f97316;
+                    border: 4px solid white;
+                    box-shadow: 0 4px 12px rgba(0,0,0,.25);
+                    font-size: 20px;
+                ">
+                    🛵
+                </div>
+            `,
+            iconSize: [42, 42],
+            iconAnchor: [21, 21],
+        });
+
+        driverMarker = L.marker(
+            [driverLatitude, driverLongitude],
+            {
+                icon: driverIcon,
+            }
+        )
+            .addTo(deliveryMap)
+            .bindPopup('Conductor');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Marcador del cliente
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            Number.isFinite(deliveryLatitude) &&
+            Number.isFinite(deliveryLongitude)
+        ) {
+            const deliveryIcon = L.divIcon({
+                className: '',
+                html: `
+                    <div style="
+                        width: 42px;
+                        height: 42px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 9999px;
+                        background: #2563eb;
+                        border: 4px solid white;
+                        box-shadow: 0 4px 12px rgba(0,0,0,.25);
+                        font-size: 20px;
+                    ">
+                        🏠
+                    </div>
+                `,
+                iconSize: [42, 42],
+                iconAnchor: [21, 21],
+            });
+
+            deliveryMarker = L.marker(
+                [deliveryLatitude, deliveryLongitude],
+                {
+                    icon: deliveryIcon,
                 }
+            )
+                .addTo(deliveryMap)
+                .bindPopup('Lugar de entrega');
 
-                function initializeDeliveryMap() {
-                    const element = document.getElementById(
-                        'delivery-map'
-                    );
-
-                    const coordinates = getCoordinates(element);
-
-                    if (!element || !coordinates) {
-                        return;
-                    }
-
-                    /*
-                     * Este ejemplo espera que Google Maps JavaScript API
-                     * ya esté cargado en el layout.
-                     */
-                    if (
-                        typeof window.google === 'undefined' ||
-                        typeof window.google.maps === 'undefined'
-                    ) {
-                        console.warn(
-                            'Google Maps todavía no está disponible.'
-                        );
-
-                        return;
-                    }
-
-                    if (!deliveryMap) {
-                        deliveryMap = new google.maps.Map(element, {
-                            center: coordinates.driver,
-                            zoom: 14,
-                            disableDefaultUI: true,
-                            zoomControl: true,
-                            mapTypeControl: false,
-                            streetViewControl: false,
-                            fullscreenControl: false,
-                        });
-
-                        driverMarker = new google.maps.Marker({
-                            position: coordinates.driver,
-                            map: deliveryMap,
-                            title: 'Conductor',
-                        });
-
-                        if (coordinates.delivery) {
-                            deliveryMarker = new google.maps.Marker({
-                                position: coordinates.delivery,
-                                map: deliveryMap,
-                                title: 'Dirección de entrega',
-                            });
-
-                            routeLine = new google.maps.Polyline({
-                                path: [
-                                    coordinates.driver,
-                                    coordinates.delivery,
-                                ],
-
-                                geodesic: true,
-                                strokeOpacity: 0.8,
-                                strokeWeight: 4,
-                                map: deliveryMap,
-                            });
-
-                            const bounds = new google.maps.LatLngBounds();
-
-                            bounds.extend(coordinates.driver);
-                            bounds.extend(coordinates.delivery);
-
-                            deliveryMap.fitBounds(bounds);
-
-                            google.maps.event.addListenerOnce(
-                                deliveryMap,
-                                'bounds_changed',
-                                () => {
-                                    if (deliveryMap.getZoom() > 16) {
-                                        deliveryMap.setZoom(16);
-                                    }
-                                }
-                            );
-                        }
-
-                        return;
-                    }
-
-                    driverMarker?.setPosition(coordinates.driver);
-
-                    if (coordinates.delivery) {
-                        deliveryMarker?.setPosition(
-                            coordinates.delivery
-                        );
-
-                        routeLine?.setPath([
-                            coordinates.driver,
-                            coordinates.delivery,
-                        ]);
-                    }
-
-                    deliveryMap.panTo(coordinates.driver);
+            routeLine = L.polyline(
+                [
+                    [driverLatitude, driverLongitude],
+                    [deliveryLatitude, deliveryLongitude],
+                ],
+                {
+                    color: '#f97316',
+                    weight: 5,
+                    opacity: 0.8,
+                    dashArray: '10, 10',
                 }
+            ).addTo(deliveryMap);
 
-                document.addEventListener(
-                    'DOMContentLoaded',
-                    initializeDeliveryMap
-                );
+            const bounds = L.latLngBounds([
+                [driverLatitude, driverLongitude],
+                [deliveryLatitude, deliveryLongitude],
+            ]);
 
-                document.addEventListener(
-                    'livewire:navigated',
-                    initializeDeliveryMap
-                );
+            deliveryMap.fitBounds(bounds, {
+                padding: [50, 50],
+                maxZoom: 16,
+            });
+        }
 
-                document.addEventListener(
-                    'livewire:init',
-                    () => {
-                        Livewire.hook(
-                            'morph.updated',
-                            () => {
-                                window.setTimeout(
-                                    initializeDeliveryMap,
-                                    100
-                                );
-                            }
-                        );
-                    }
-                );
-            })();
-        </script>
+        /*
+        |--------------------------------------------------------------------------
+        | Corregir tamaño después de renderizar
+        |--------------------------------------------------------------------------
+        */
+
+        setTimeout(() => {
+            deliveryMap?.invalidateSize();
+        }, 200);
+    }
+
+    initializeDeliveryMap();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Actualizar posición del conductor
+    |--------------------------------------------------------------------------
+    */
+
+    $wire.$on('driver-location-updated', (event) => {
+        const latitude = Number.parseFloat(event.latitude);
+        const longitude = Number.parseFloat(event.longitude);
+
+        if (
+            !Number.isFinite(latitude) ||
+            !Number.isFinite(longitude)
+        ) {
+            return;
+        }
+
+        if (!deliveryMap || !driverMarker) {
+            initializeDeliveryMap();
+
+            return;
+        }
+
+        const newPosition = [latitude, longitude];
+
+        driverMarker.setLatLng(newPosition);
+
+        if (deliveryMarker && routeLine) {
+            const deliveryPosition =
+                deliveryMarker.getLatLng();
+
+            routeLine.setLatLngs([
+                newPosition,
+                [
+                    deliveryPosition.lat,
+                    deliveryPosition.lng,
+                ],
+            ]);
+
+            deliveryMap.fitBounds(
+                L.latLngBounds([
+                    newPosition,
+                    [
+                        deliveryPosition.lat,
+                        deliveryPosition.lng,
+                    ],
+                ]),
+                {
+                    padding: [50, 50],
+                    maxZoom: 16,
+                }
+            );
+        } else {
+            deliveryMap.setView(newPosition, 15);
+        }
+    });
+</script>
+@endscript
+
+        @assets
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        defer
+    ></script>
+@endassets
     @endpush
 </div>

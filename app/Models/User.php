@@ -55,6 +55,22 @@ class User extends Authenticatable
         ];
     }
 
+    public function locations()
+{
+    return $this->hasMany(DriverLocation::class, 'driver_id');
+}
+
+public function driverProfile(): HasOne
+{
+    return $this->hasOne(DriverProfile::class);
+}
+
+public function latestLocation()
+{
+    return $this->hasOne(DriverLocation::class, 'driver_id')
+        ->latestOfMany();
+}
+
     public function orders():HasMany
     {
         return $this->hasMany(Order::class, 'user_id');
@@ -88,7 +104,7 @@ class User extends Authenticatable
             [],
             [
                 'balance_cents' => 0,
-                'currency' => 'usd',
+                'currency' => 'mxn',
             ]
         );
     }

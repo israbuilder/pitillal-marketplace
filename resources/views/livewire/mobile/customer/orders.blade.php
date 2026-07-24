@@ -242,7 +242,7 @@
 
                                     @if ($this->canTrack($order))
                                         <a
-                                            href="{{ route('customer.orders.tracking', $order) }}"
+                                            href="{{ route('customer.orders.show', $order) }}"
                                             wire:navigate
                                             class="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-orange-500 text-sm font-semibold text-white"
                                         >
